@@ -18,6 +18,11 @@ export class AuthService {
     return !!user; // Trả về true nếu email đã tồn tại
   }
 
+  // Hàm hash mật khẩu
+  private hashPassword(password: string): string {
+    return bcrypt.hashSync(password, 12);
+  }
+
   // Đăng ký tài khoản và gửi OTP
   async registerOtp(registerOtpDto: RegisterOtpDto): Promise<{
     message: string;
@@ -37,8 +42,7 @@ export class AuthService {
       }
 
       // Hash mật khẩu
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      const hashedPassword = (await bcrypt.hash(password, 12)) as string;
+      const hashedPassword = this.hashPassword(password);
 
       // Tạo OTP
       const otp: string = crypto.randomInt(100000, 999999).toString();
