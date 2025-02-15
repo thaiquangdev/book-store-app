@@ -1,12 +1,18 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Req,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterOtpDto } from './dto/register-otp.dto';
+import { LoginDto } from './dto/login.dto';
+import { AuthGuard } from './auth.guard';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -27,5 +33,35 @@ export class AuthController {
     };
   }> {
     return this.authService.registerOtp(registerOtpDto);
+  }
+
+  // Endpoint: xác thực otp
+  // Method: POST
+  // url: /auth/verify-otp
+  @Post('/verify-otp')
+  async verifyOtp(
+    @Body() body: { email: string; otp: string },
+  ): Promise<{ message: string }> {
+    return this.authService.verifyOtp(body.email, body.otp);
+  }
+
+  // Endpoint: đăng nhập
+  // Method: POST
+  // url: /auth/login
+  @Post('/login')
+  async login(
+    @Body() loginDto: LoginDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return this.authService.login(loginDto);
+  }
+
+  // Endpoint: đăng xuất
+  // Method: GET
+  // url: /auth/logout
+  @UseGuards(AuthGuard)
+  @Get('/logout')
+  async logout(@Req() req: Request): Promise<{ message: string }> {
+    const { id } = req['user'];
+    return this.authService.logout(String(id));
   }
 }

@@ -3,12 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @Column({ type: 'varchar', length: 36, primary: true })
   id: string;
 
   @Column({ name: 'user_name', nullable: false })
@@ -26,8 +26,8 @@ export class User {
   @Column({ nullable: false, default: 'user' })
   role: string;
 
-  @Column({ name: 'refresh_token', nullable: true })
-  refreshToken: string;
+  @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
+  refreshToken: string | null;
 
   @Column({ name: 'password_reset_token', nullable: true })
   passwordResetToken: string;
@@ -38,15 +38,15 @@ export class User {
   @Column({ name: 'email_verify', default: false })
   emailVerify: boolean;
 
-  @Column({ nullable: true })
-  otp: string;
+  @Column({ type: 'varchar', length: 6, nullable: true }) // ✅ OTP là chuỗi tối đa 6 ký tự
+  otp: string | null;
 
-  @Column({ nullable: true })
-  otpExpiry: Date;
+  @Column({ type: 'timestamp', nullable: true }) // ✅ Định rõ kiểu timestamp
+  otpExpiry: Date | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @CreateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at' }) // ✅ Dùng UpdateDateColumn thay vì CreateDateColumn
   updatedAt: Date;
 }
