@@ -30,10 +30,10 @@ export class User {
   refreshToken: string | null;
 
   @Column({ name: 'password_reset_token', nullable: true })
-  passwordResetToken: string;
+  passwordResetToken: string | null;
 
   @Column({ name: 'password_reset_expiry', type: 'timestamp', nullable: true })
-  passwordResetExpiry: Date;
+  passwordResetExpiry: Date | null;
 
   @Column({ name: 'email_verify', default: false })
   emailVerify: boolean;

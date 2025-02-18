@@ -3,10 +3,10 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 import { RegisterOtpDto } from './dto/register-otp.dto';
 import { User } from '../users/user.entity';
 import { MailService } from '../mail/mail.service';
@@ -14,6 +14,7 @@ import { LoginDto } from './dto/login.dto';
 import { generateOtp } from 'src/common/utils/otp.util';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { comparePassword, hashPassword } from 'src/common/utils/password.util';
 
 @Injectable()
 export class AuthService {
@@ -29,11 +30,6 @@ export class AuthService {
   private async checkEmailExists(email: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { email } });
     return !!user; // Trả về true nếu email đã tồn tại
-  }
-
-  // Hàm hash mật khẩu
-  private hashPassword(password: string): string {
-    return bcrypt.hashSync(password, 12);
   }
 
   // hàm generate token
@@ -79,7 +75,7 @@ export class AuthService {
       }
 
       // Hash mật khẩu
-      const hashedPassword = this.hashPassword(password);
+      const hashedPassword = hashPassword(password);
 
       // Tạo OTP
       const { otp, otpExpiry } = generateOtp();
@@ -184,7 +180,7 @@ export class AuthService {
     }
 
     // ✅ So sánh mật khẩu
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = comparePassword(password, user.password);
     if (!isPasswordValid) {
       throw new BadRequestException('Email hoặc mật khẩu không đúng');
     }
@@ -214,6 +210,10 @@ export class AuthService {
 
     // ✅ Nếu user đã xác thực, tạo token đăng nhập
     const token = await this.generateToken({ id: user.id, email: user.email });
+
+    // ✅ Lưu refreshToken vào db
+    user.refreshToken = token.refreshToken;
+    await this.userRepository.save(user);
     return {
       accessToken: token.accessToken,
       refreshToken: token.refreshToken,
@@ -230,6 +230,46 @@ export class AuthService {
     await this.userRepository.save(user);
     return {
       message: 'Đăng xuất thành công',
+    };
+  }
+
+  // tạo mới accessToken và refreshToken
+  async refreshToken(
+    refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    // ✅ Kiểm tra refreshToken có hợp lệ không
+    let payload: { userId: string; email: string };
+    try {
+      payload = await this.jwtService.verifyAsync<{
+        userId: string;
+        email: string;
+      }>(refreshToken, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+      });
+    } catch {
+      throw new UnauthorizedException(
+        'Refresh Token không hợp lệ hoặc đã hết hạn',
+      );
+    }
+
+    // ✅ Kiểm tra user có tồn tại & refreshToken có khớp không
+    const user = await this.userRepository.findOne({
+      where: { id: payload.userId },
+    });
+    if (!user || user.refreshToken !== refreshToken) {
+      throw new UnauthorizedException('Refresh Token không hợp lệ');
+    }
+
+    // ✅ Tạo accessToken & refreshToken mới
+    const token = await this.generateToken({ id: user.id, email: user.email });
+
+    // ✅ Cập nhật refreshToken mới vào database
+    user.refreshToken = token.refreshToken;
+    await this.userRepository.save(user);
+
+    return {
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
     };
   }
 }

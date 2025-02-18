@@ -64,4 +64,14 @@ export class AuthController {
     const { id } = req['user'];
     return this.authService.logout(String(id));
   }
+
+  // Endpoint: tạo mới accessToken và refreshToken
+  // Method: POST
+  // url: /auth/refresh-token
+  @Post('/refresh-token')
+  async refreshToken(
+    @Body() refreshToken: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    return this.authService.refreshToken(refreshToken);
+  }
 }
