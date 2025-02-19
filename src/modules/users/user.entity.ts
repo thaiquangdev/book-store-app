@@ -29,10 +29,14 @@ export class User {
   @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
   refreshToken: string | null;
 
-  @Column({ name: 'password_reset_token', nullable: true })
+  @Column({ name: 'password_reset_token', type: 'varchar', nullable: true })
   passwordResetToken: string | null;
 
-  @Column({ name: 'password_reset_expiry', type: 'timestamp', nullable: true })
+  @Column({
+    name: 'password_reset_expiry',
+    type: 'timestamp',
+    nullable: true,
+  })
   passwordResetExpiry: Date | null;
 
   @Column({ name: 'email_verify', default: false })
