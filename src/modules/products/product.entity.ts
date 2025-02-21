@@ -11,6 +11,7 @@ import {
 import { ProductImage } from './product-image.entity';
 import { Inventory } from './inventory.entity';
 import { Wishlist } from '../wishlists/wishlist.entity';
+import { Review } from '../reviews/review.entity';
 
 @Entity('products')
 export class Product {
@@ -69,6 +70,9 @@ export class Product {
 
   @OneToMany(() => Wishlist, (wishlist) => wishlist.product)
   wishlists: Wishlist[];
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[];
 
   @CreateDateColumn()
   createdAt: Date;
