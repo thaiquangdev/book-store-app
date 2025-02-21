@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Wishlist } from '../wishlists/wishlist.entity';
 
 @Entity('users')
 export class User {
@@ -47,6 +49,9 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true }) // ✅ Định rõ kiểu timestamp
   otpExpiry: Date | null;
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
+  wishlists: Wishlist[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

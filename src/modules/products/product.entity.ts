@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { ProductImage } from './product-image.entity';
 import { Inventory } from './inventory.entity';
+import { Wishlist } from '../wishlists/wishlist.entity';
 
 @Entity('products')
 export class Product {
@@ -65,6 +66,9 @@ export class Product {
   })
   @JoinColumn({ name: 'inventory_id' })
   inventory: Inventory;
+
+  @OneToMany(() => Wishlist, (wishlist) => wishlist.product)
+  wishlists: Wishlist[];
 
   @CreateDateColumn()
   createdAt: Date;
