@@ -10,6 +10,10 @@ import { ProductImage } from './product-image.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { UpdateStockDto } from './dto/update-stock.dto';
+import { Inventory } from './inventory.entity';
+import { StockHistory } from './stock-history.entity';
+import { StockType } from 'src/common/enums/stock-type.enum';
 
 @Injectable()
 export class ProductsService {
@@ -18,6 +22,8 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
+    @InjectRepository(StockHistory)
+    private readonly stockHistoryRepository: Repository<StockHistory>,
     private readonly dataSource: DataSource,
   ) {}
 
@@ -304,5 +310,82 @@ export class ProductsService {
       limit,
       data,
     };
+  }
+
+  // nhập - xuất số lượng sản phẩm
+  async updateStock(updateStockDto: UpdateStockDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      let inventory = await queryRunner.manager.findOne(Inventory, {
+        where: { product: { id: updateStockDto.pid } },
+      });
+
+      if (!inventory) {
+        inventory = queryRunner.manager.create(Inventory, {
+          product: { id: updateStockDto.pid },
+        });
+        await queryRunner.manager.save(inventory);
+      }
+
+      if (
+        updateStockDto.type === StockType.EXPORT &&
+        inventory.stock < updateStockDto.quantity
+      ) {
+        throw new BadRequestException('Số lượng tồn kho không đủ');
+      }
+
+      // ✅ Cập nhật số lượng nhập/xuất
+      if (updateStockDto.type === StockType.IMPORT) {
+        inventory.stock += updateStockDto.quantity;
+        inventory.imported += updateStockDto.quantity; // ✅ Cập nhật tổng số lượng đã nhập
+      } else {
+        inventory.stock -= updateStockDto.quantity;
+        inventory.sold += updateStockDto.quantity; // ✅ Cập nhật tổng số lượng đã bán
+      }
+
+      await queryRunner.manager.save(inventory);
+
+      // ✅ Lưu lịch sử nhập/xuất vào `stock_history`
+      const stockHistory = queryRunner.manager.create(StockHistory, {
+        product: { id: updateStockDto.pid },
+        quantity: updateStockDto.quantity,
+        type: updateStockDto.type,
+      });
+
+      await queryRunner.manager.save(stockHistory);
+
+      await queryRunner.commitTransaction();
+      return {
+        message: `${updateStockDto.type === StockType.IMPORT ? 'Nhập' : 'Xuất'} hàng thành công`,
+        updatedStock: inventory.stock,
+        totalSold: inventory.sold,
+        totalImported: inventory.imported,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  // Xem lịch sử nhập - xuất
+  async getStockHistoryByProduct() {
+    return this.stockHistoryRepository.find({
+      relations: {
+        product: true,
+      },
+      select: {
+        product: {
+          productName: true,
+        },
+        quantity: true,
+        type: true,
+        id: true,
+      },
+    });
   }
 }

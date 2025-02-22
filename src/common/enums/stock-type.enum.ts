@@ -1,5 +1,4 @@
 export enum StockType {
-  IMPORT = 'Import',
-  SALE = 'Sale',
-  ADJUSTMENT = 'Adjustment',
+  IMPORT = 'IMPORT',
+  EXPORT = 'EXPORT',
 }

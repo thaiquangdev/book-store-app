@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Wishlist } from '../wishlists/wishlist.entity';
+import { Cart } from '../carts/cart.entity';
 
 @Entity('users')
 export class User {
@@ -52,6 +53,9 @@ export class User {
 
   @OneToMany(() => Wishlist, (wishlist) => wishlist.user)
   wishlists: Wishlist[];
+
+  @OneToMany(() => Cart, (cart) => cart.user)
+  carts: Cart[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

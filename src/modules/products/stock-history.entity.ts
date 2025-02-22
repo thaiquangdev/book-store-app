@@ -20,7 +20,7 @@ export class StockHistory {
   quantity: number; // ✅ Số lượng thay đổi (+ nhập hàng, - bán hàng)
 
   @Column({ type: 'enum', enum: StockType }) // ✅ Loại thay đổi kho
-  type: 'Import' | 'Sale' | 'Adjustment';
+  type: StockType;
 
   @CreateDateColumn()
   createdAt: Date;

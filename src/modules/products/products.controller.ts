@@ -26,6 +26,7 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { UpdateStockDto } from './dto/update-stock.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -131,6 +132,26 @@ export class ProductsController {
   @Delete('/delete-product/:id')
   async deleteProduct(@Param('id') id: string): Promise<{ message: string }> {
     return this.productsService.deleteProduct(id);
+  }
+
+  // Endpoint: Nhập xuất số lượng sản phẩm - admin
+  // Method: PUT
+  // url: products/update-stock
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Put('/update-stock')
+  async updateStock(@Body() updateStockDto: UpdateStockDto) {
+    return this.productsService.updateStock(updateStockDto);
+  }
+
+  // Endpoint: Xem lịch sử nhập - xuất - admin
+  // Method: GET
+  // url: products/history
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get('/history')
+  async getStockHistory() {
+    return this.productsService.getStockHistoryByProduct();
   }
 
   // Endpoint: Xem chi tiết sản phẩm - user
