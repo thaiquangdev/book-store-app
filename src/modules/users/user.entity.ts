@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { Wishlist } from '../wishlists/wishlist.entity';
 import { Cart } from '../carts/cart.entity';
+import { Address } from '../address/address.entity';
+import { Order } from '../checkouts/order.entity';
 
 @Entity('users')
 export class User {
@@ -56,6 +58,12 @@ export class User {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
+
+  @OneToMany(() => Address, (address) => address.user)
+  addresses: Address[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
