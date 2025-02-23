@@ -11,10 +11,11 @@ import { User } from '../users/user.entity';
 import { Address } from '../address/address.entity';
 import { OrderStatus } from 'src/common/enums/order-status.enum';
 import { OrderItem } from './order-item.entity';
+import { PaymentMethod } from 'src/common/enums/payment-method.enum'; // ✅ Import Enum
 
 @Entity('orders')
 export class Order {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => User, (user) => user.orders, { onDelete: 'CASCADE' })
@@ -32,9 +33,12 @@ export class Order {
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: string;
 
+  @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.COD }) // ✅ Thêm phương thức thanh toán
+  paymentMethod: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
-  upatedAt: Date;
+  updatedAt: Date;
 }
