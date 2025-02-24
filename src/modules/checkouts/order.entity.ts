@@ -36,6 +36,12 @@ export class Order {
   @Column({ type: 'enum', enum: PaymentMethod, default: PaymentMethod.COD }) // ✅ Thêm phương thức thanh toán
   paymentMethod: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  orderCode?: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  transactionId?: number;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -34,6 +34,28 @@ export class CheckoutsController {
     return this.checkoutsService.createCheckout(String(id), addressId);
   }
 
+  // Endpoint: Thanh toán Zalopay
+  // Method: POST
+  // Url: /checkouts/zalopay
+  @UseGuards(AuthGuard)
+  @Post('/zalopay')
+  async createCheckoutZalopay(
+    @Req() request: Request,
+    @Body('addressId') addressId: string,
+  ) {
+    const { id } = request['user'];
+    return this.checkoutsService.createCheckoutZalopay(String(id), addressId);
+  }
+
+  // Endpoint: Callback Zalopay
+  // Method: GET
+  // Url: /checkouts/callback
+  @UseGuards(AuthGuard)
+  @Get('/callback')
+  async callBackZalopay(@Body() data: any) {
+    return this.checkoutsService.callBackZalopay(data);
+  }
+
   // Endpoint: Chuyển trạng thái sang shipped -  admin
   // Method: PUT
   // Url: /checkouts/shipped/:oid
