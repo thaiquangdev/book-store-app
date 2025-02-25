@@ -1,99 +1,230 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Bookstore API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p>Dự án <strong>Bookstore API</strong> là một ứng dụng quản lý cửa hàng sách trực tuyến, được xây dựng bằng NestJS, MySQL và Docker. Dự án cung cấp các chức năng cơ bản như quản lý người dùng, danh mục sách, sản phẩm, đánh giá, giỏ hàng, thanh toán và tích hợp thanh toán zalopay.</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Công nghệ sử dụng
 
-## Description
+- Backend: NestJS
+- Database: MySQL
+- Containerization: Docker
+- Authentication: JWT (JSON Web Tokens)
+- Payment Gateway: ZaloPay
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Các chức năng chính
 
-## Project setup
+## 1.Authentication (Xác thực)
+
+- Đăng ký người dùng mới.
+- Đăng nhập và cấp JWT token.
+- Refresh token.
+
+## 2.User Management (Quản lý người dùng)
+
+- Xem thông tin người dùng.
+- Cập nhật thông tin người dùng.
+- Thay đổi mật khẩu.
+- Quên mật khẩu.
+
+## 3.Categories (Danh mục sách)
+
+- Tạo, cập nhật, xóa danh mục.
+- Lây danh sách danh mục
+
+## 4.Products (Sản phẩm)
+
+- Tạo, cập nhật, xóa sản phẩm.
+- Lấy danh sách sản phẩm theo danh mục.
+- Lấy thông tin chi tiết một sản phẩm.
+- Quản lý nhập xuất kho.
+
+## 5.Reviews (Đánh giá)
+
+- Thêm đánh giá cho sản phẩm.
+- Lấy danh sách đánh giá của một sản phẩm.
+- Sủa đánh giá.
+- Yêu thích đánh giá.
+- Báo cáo đánh giá.
+
+## 6.Wishlists (Danh sách yêu thích)
+
+- Thêm sản phẩm vào danh sách yêu thích.
+- Lấy danh sách yêu thích của người dùng.
+- Xóa sản phẩm khỏi danh sách yêu thích.
+
+## 7.Carts (Giỏ hàng)
+
+- Thêm sản phẩm vào giỏ hàng.
+- Cập nhật số lượng sản phẩm trong giỏ hàng.
+- Xóa sản phẩm khỏi giỏ hàng.
+- Lấy thông tin giỏ hàng của người dùng.
+
+## 8.Payment (Thanh toán)
+
+- Tích hợp thanh toán ZaloPay.
+- Tạo đơn hàng và xử lý thanh toán.
+- Xác nhận thanh toán thành công.
+
+## Cài đặt và chạy dự án
+
+## Yêu cầu hệ thống
+
+- Node.js (16 trở lên)
+- Docker
+- Docker compose
+
+## Các bước cài đặt
+
+1. Clone dự án
 
 ```bash
-$ yarn install
+$ git clone https://github.com/your-username/bookstore-api.git
+$ cd bookstore-api
 ```
 
-## Compile and run the project
+2. Cài đặt dependence
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+$ yarn
 ```
 
-## Run tests
+3. Cấu hình môi trường
+   Tạo file .env từ .env.example và điền các giá trị phù hợp:
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASS=password
+DB_NAME=bookstore
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USER=your_mail_user@gmail.com
+MAIL_PASS=your_pass
+MAIL_FROM=your_from
+JWT_SECRET=qwerasdjfkhasdkjfhasd
+EXP_IN_REFRESH_TOKEN=1d
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+4. Chạy dockercompose
+   Dự án sử dụng Docker để chạy MySQL. Chạy lệnh sau để khởi động container:
 
 ```bash
-$ yarn install -g mau
-$ mau deploy
+$ docker-compose up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+5. Chạy ứng dụng
 
-## Resources
+```bash
+$ yarn start:dev
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Ứng dụng sẽ chạy tại http://localhost:3000.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+6. Truy cập Swagger UI
 
-## Support
+Truy cập http://localhost:3000/api để xem và tương tác với các API thông qua Swagger UI.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+bookstore-api/
+├── src/
+│ ├── common/ # Các utility, helper và shared modules
+│ ├── config/ # Cấu hình ứng dụng
+│ ├── database/ # Cấu hình cơ sở dữ liệu và kết nối
+│ ├── modules
+│ │ ├── address/ # Địa chỉ người dùng
+│ │ ├── auth/ # Xác thực người dùng
+│ │ ├── users/ # Quản lý người dùng
+│ │ ├── categories/ # Quản lý danh mục
+│ │ ├── products/ # Quản lý sản phẩm
+│ │ ├── reviews/ # Quản lý đánh giá
+│ │ ├── wishlists/ # Quản lý danh sách yêu thích
+│ │ ├── carts/ # Quản lý giỏ hàng
+│ │ ├── payments/ # Xử lý thanh toán (ZaloPay)
+│ │ ├── mail/ # xử lý mail
+│ │ └── app.module.ts # Module chính của ứng dụng
+│ │ └── main.ts # File khởi chạy ứng dụng
+├── test/ # Unit tests và integration tests
+├── docker-compose.yml # Cấu hình Docker Compose
+├── Dockerfile # Dockerfile cho ứng dụng
+├── .env.example # Mẫu file cấu hình môi trường
+└── README.md # Tài liệu dự án
+```
 
-## Stay in touch
+## API Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## auth
 
-## License
+- POST /auth/register - Đăng ký người dùng mới.
+- POST /auth/login - Đăng nhập và nhận JWT token.
+- POST /auth/refresh-token - Làm mới JWT token.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## auth
+
+- PUT /users/change-profile - Cập nhật thông tin người dùng.
+- PUT /users/change-password - Thay đổi mật khẩu.
+- PUT /users/forgot-password - Quên mật khẩu.
+- PUT /users/reset-password - Đặt lại mật khẩu.
+
+## categoies
+
+- GET /categories/get-categories - Lấy danh sách danh mục.
+- POST /categories/create-category - Tạo danh mục mới.
+- PUT /categories/update-category/:id - Cập nhật danh mục.
+- DELETE /categories/delete-category/:id - Xóa danh mục.
+
+## products
+
+- GET /products - Lấy danh sách sản phẩm.
+- GET /products/:slug - Lấy thông tin chi tiết một sản phẩm.
+- POST /products/create-product - Tạo sản phẩm mới.
+- PUT /products/update-product/:id - Cập nhật sản phẩm.
+- DELETE /products/delete-product/:id - Xóa sản phẩm.
+- PUT /products/update-stock - Nhập xuất số lượng sản phẩm.
+- GET /products/history - Xem lịch sử nhập xuất.
+
+## reviews
+
+- GET /reviews - Lấy danh sách đánh giá của sản phẩm.
+- POST /reviews - Thêm đánh giá cho sản phẩm.
+- PUT /reviews/:rid - Cập nhật đánh giá.
+- POST /reviews/like-review - Thích đánh giá.
+- POST /reviews/report-review - Báo cáo đánh giá.
+
+## wishlists
+
+- GET /wishlists - Lấy danh sách yêu thích của người dùng.
+- POST /wishlists - Thêm sản phẩm vào danh sách yêu thích.
+- DELETE /wishlists/:pid - Xóa sản phẩm khỏi danh sách yêu thích.
+
+## carts
+
+- GET /carts - Lấy thông tin giỏ hàng của người dùng.
+- POST /carts - Thêm sản phẩm vào giỏ hàng.
+- PUT /carts - Cập nhật số lượng sản phẩm trong giỏ hàng.
+- DELETE /carts/:pid - Xóa sản phẩm khỏi giỏ hàng.
+
+## payments
+
+- POST /checkouts/cod - Tạo đơn hàng COD.
+- POST /checkouts/zalopay - Tạo đơn hàng và chuyển hướng đến zalopay.
+- GET /checkouts/callback - Zalopay gọi callback và trả về kết quả.
+- PUT /checkouts/shipped/:oid - Chuyển trạng thái đơn hàng sang shipped.
+- PUT /checkouts/cancel-order/:oid - Hủy đơn hàng.
+- PUT /checkouts/deliver-order/:oid - Chuyển đơn hàng sang nhận hàng delived.
+- GET /checkouts/get-orders-user - Lấy danh sách dơn hàng đã mua.
+- GET /checkouts/get-orders = Lấy danh sách đơn hàng.
+
+## addresses
+
+- POST /address - Tạo mới một địa chỉ.
+- PUT /address/:aid - Sửa một địa chỉ.
+- DELETE /address/:aid - Xóa một địa chỉ.
+- GET /address - Xem danh sách địa chỉ.
+- PUT /address/address-default/:aid - Đặt địa chỉ làm mặc định.
+
+## Tích hợp Zalopay
+
+Dự án tích hợp ZaloPay để xử lý thanh toán. Các bước tích hợp bao gồm:
+
+1. Tạo đơn hàng và gửi yêu cầu thanh toán đến ZaloPay.
+2. Xử lý callback từ ZaloPay để xác nhận thanh toán thành công.

@@ -16,7 +16,14 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decoratior';
 import { Role } from 'src/common/enums/role.enum';
 import { CheckoutQueryDto } from './dto/checkout-query.dto';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('checkouts')
 @Controller('checkouts')
 export class CheckoutsController {
   constructor(private readonly checkoutsService: CheckoutsService) {}
@@ -24,6 +31,10 @@ export class CheckoutsController {
   // Endpoint: Thanh toán COD
   // Method: POST
   // Url: /checkouts/cod
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Thanh toán COD' })
+  @ApiResponse({ status: 201, description: 'Thanh toán COD thành công' })
+  @ApiResponse({ status: 400, description: 'Thanh toán COD thất bại' })
   @UseGuards(AuthGuard)
   @Post('/cod')
   async createCheckout(
@@ -37,6 +48,10 @@ export class CheckoutsController {
   // Endpoint: Thanh toán Zalopay
   // Method: POST
   // Url: /checkouts/zalopay
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Thanh toán Zalopay' })
+  @ApiResponse({ status: 201, description: 'Thanh toán Zalopay thành công' })
+  @ApiResponse({ status: 400, description: 'Thanh toán Zalopay thất bại' })
   @UseGuards(AuthGuard)
   @Post('/zalopay')
   async createCheckoutZalopay(
@@ -50,7 +65,6 @@ export class CheckoutsController {
   // Endpoint: Callback Zalopay
   // Method: GET
   // Url: /checkouts/callback
-  @UseGuards(AuthGuard)
   @Get('/callback')
   async callBackZalopay(@Body() data: any) {
     return this.checkoutsService.callBackZalopay(data);
@@ -59,6 +73,16 @@ export class CheckoutsController {
   // Endpoint: Chuyển trạng thái sang shipped -  admin
   // Method: PUT
   // Url: /checkouts/shipped/:oid
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Chuyển trạng thái sang shipped' })
+  @ApiResponse({
+    status: 200,
+    description: 'Chuyển trạng thái sang shipped thành công',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Chuyển trạng thái sang shipped thất bại',
+  })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Put('/shipped/:oid')
@@ -69,6 +93,10 @@ export class CheckoutsController {
   // Endpoint: Hủy đơn hàng - admin
   // Method: PUT
   // Url: /checkouts/cancel-order/:oid
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Hủy đơn hàng' })
+  @ApiResponse({ status: 200, description: 'Hủy đơn hàng thành công' })
+  @ApiResponse({ status: 400, description: 'Hủy đơn hàng thất bại' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Put('/cancel-order/:oid')
@@ -79,6 +107,16 @@ export class CheckoutsController {
   // Endpoint: chuyển đơn hàng sang đã nhận hàng delived - admin
   // Method: PUT
   // Url: /checkouts/deliver-order/:oid
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Chuyển đơn hàng sang nhận hàng delived' })
+  @ApiResponse({
+    status: 200,
+    description: 'Chuyển đơn hàng sang nhận hàng delived thành công',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Chuyển đơn hàng sang nhận hàng delived thất bại',
+  })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Put('/deliver-order/:oid')
@@ -89,6 +127,9 @@ export class CheckoutsController {
   // Endpoint: lấy danh sách đơn hàng đã mua - user
   // Method: GET
   // Url: /checkouts/get-orders-user
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xem danh sách đơn hàng' })
+  @ApiResponse({ status: 200, description: 'Xem danh sách đơn hàng' })
   @UseGuards(AuthGuard)
   @Get('/get-orders-user')
   async getOrdersUser(
@@ -102,6 +143,9 @@ export class CheckoutsController {
   // Endpoint: lấy danh sách đơn hàng - admin
   // Method: GET
   // Url: /checkouts/get-orders
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xem danh sách đơn hàng' })
+  @ApiResponse({ status: 200, description: 'Xem danh sách đơn hàng' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Get('/get-orders')

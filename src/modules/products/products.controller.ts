@@ -27,7 +27,15 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -35,6 +43,10 @@ export class ProductsController {
   // Endpoint: Tạo mới sản phẩm - admin
   // Method: POST
   // url: products/create-product
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Tạo mới sản phẩm' })
+  @ApiResponse({ status: 201, description: 'Tạo mới sản phẩm thành công' })
+  @ApiResponse({ status: 400, description: 'Tạo mới sản phẩm thất bại' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Post('create-product')
@@ -82,6 +94,10 @@ export class ProductsController {
   // Endpoint: Cập nhật sản phẩm - admin
   // Method: PUT
   // url: products/update-product/:id
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Cập nhật sản phẩm' })
+  @ApiResponse({ status: 200, description: 'Cập nhật sản phẩm thành công' })
+  @ApiResponse({ status: 400, description: 'Cập nhật sản phẩm thất bại' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(
@@ -127,6 +143,10 @@ export class ProductsController {
   // Endpoint: Xóa sản phẩm - admin
   // Method: DELETE
   // url: product/delete-product/:id
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xóa sản phẩm' })
+  @ApiResponse({ status: 200, description: 'Xóa sản phẩm thành công' })
+  @ApiResponse({ status: 400, description: 'Xóa sản phẩm thất bại' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Delete('/delete-product/:id')
@@ -137,6 +157,16 @@ export class ProductsController {
   // Endpoint: Nhập xuất số lượng sản phẩm - admin
   // Method: PUT
   // url: products/update-stock
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Nhập xuất số lượng sản phẩm' })
+  @ApiResponse({
+    status: 200,
+    description: 'Nhập xuất số lượng sản phẩm thành công',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Nhập xuất số lượng sản phẩm thất bại',
+  })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Put('/update-stock')
@@ -147,6 +177,9 @@ export class ProductsController {
   // Endpoint: Xem lịch sử nhập - xuất - admin
   // Method: GET
   // url: products/history
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Xem lịch sử nhập xuất' })
+  @ApiResponse({ status: 201, description: 'Xem lịch sử nhập xuất ' })
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   @Get('/history')
@@ -157,6 +190,8 @@ export class ProductsController {
   // Endpoint: Xem chi tiết sản phẩm - user
   // Method: GET
   // url: products/:slug
+  @ApiOperation({ summary: 'Xem chi tiết sản phẩm' })
+  @ApiResponse({ status: 200, description: 'Chi tiết sản phẩm' })
   @Get('/:slug')
   async getProduct(@Param('slug') slug: string): Promise<Product> {
     return this.productsService.getProduct(slug);
@@ -165,6 +200,8 @@ export class ProductsController {
   // Endpoint: Xem danh sách sản phẩm - user
   // Method: GET
   // url: products/
+  @ApiOperation({ summary: 'Xem danh sách sản phẩm' })
+  @ApiResponse({ status: 200, description: 'Xem danh sách sản phẩm' })
   @Get('')
   @UsePipes(new ValidationPipe({ transform: true }))
   async getProducts(@Query() query: ProductQueryDto): Promise<{
